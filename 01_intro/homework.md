@@ -36,6 +36,11 @@ What's the standard deviation of the trips duration in January?
 * 52.59
 * 62.59
 
+### Q2. Solution
+
+* 42.59
+
+![duration std](image-2.png)
 
 ## Q3. Dropping outliers
 
