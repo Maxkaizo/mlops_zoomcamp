@@ -2,6 +2,7 @@
 
 The goal of this homework is to train a simple model for predicting the duration of a ride - similar to what we did in this module.
 
+My [notebook](https://github.com/Maxkaizo/mlops_zoomcamp/blob/main/01_intro/homework.ipynb)
 
 ## Q1. Downloading the data
 
@@ -113,3 +114,10 @@ What's the RMSE on validation?
 * 7.81
 * 11.81
 * 16.81
+
+### Q6. Solution
+
+* 7.81
+
+![validation](image-7.png)
+
