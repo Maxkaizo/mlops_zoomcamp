@@ -53,6 +53,11 @@ What fraction of the records left after you dropped the outliers?
 * 95%
 * 98%
 
+### Q3. Solution
+
+* 98%
+
+![fraction outliers discarded](image-3.png)
 
 ## Q4. One-hot encoding
 
