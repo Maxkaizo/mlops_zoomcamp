@@ -113,8 +113,3 @@ What's the RMSE on validation?
 * 7.81
 * 11.81
 * 16.81
-
-## Submit the results
-
-* Submit your results here: https://courses.datatalks.club/mlops-zoomcamp-2025/homework/hw1
-* If your answer doesn't match options exactly, select the closest one
