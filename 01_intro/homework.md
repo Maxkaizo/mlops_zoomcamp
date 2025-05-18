@@ -76,6 +76,11 @@ What's the dimensionality of this matrix (number of columns)?
 * 515
 * 715
 
+### Q4. Solution
+
+* 515
+
+![dv columns](image-5.png)
 
 ## Q5. Training a model
 
@@ -91,6 +96,12 @@ What's the RMSE on train?
 * 11.64
 * 16.64
 
+
+### Q5. Solution
+
+* 7.64
+
+![RMSE](image-6.png)
 
 ## Q6. Evaluating the model
 
