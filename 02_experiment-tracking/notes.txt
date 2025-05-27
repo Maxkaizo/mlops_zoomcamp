@@ -1,5 +1,7 @@
 # notes from lesson
 
-
 # start mlflow ui
 mlflow ui --backend-store-uri sqlite:///mlflow.db
+
+# start a tracking server
+mlflow server --backend-store-uri sqlite:///mlflow_tracking_server.db --default-artifact-root ./artifacts
