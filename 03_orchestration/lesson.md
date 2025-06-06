@@ -55,12 +55,14 @@ tasks:
 ```
 ![alt text](images/hello_flow.png)
 
-
-
 ### Step 3: Orchestrating the Workflow
+
+Beyond this point, we'll need persistent storage, so we'll use Docker volumes leveragin this suggested [configuration](https://kestra.io/docs/installation/docker-compose) 
 
 * Get the code from the previous unit (see [code](code/))
 * Use the tool to orchestrate the steps in the pipeline
+
+
 
 ### Step 4: Parametrizing the Workflow
 
