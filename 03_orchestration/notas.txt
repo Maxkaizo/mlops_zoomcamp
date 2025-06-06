@@ -1,0 +1,11 @@
+# Iniciar el server
+
+mlflow server \
+  --backend-store-uri sqlite:///mlflow_data/mlflow.db \
+  --default-artifact-root ./mlflow_data/artifacts 
+
+# correr el entrenamiento ya con el "pipeline"
+
+python duration-prediction.py --year=2021 --month=1
+
+
