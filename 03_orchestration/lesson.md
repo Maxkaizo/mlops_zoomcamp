@@ -64,7 +64,8 @@ Beyond this point, we'll need persistent storage, so we'll use Docker volumes le
 
 #### Solution.
 
-
+* Divided the lesson's pipeline into 3 separate [scripts](https://github.com/Maxkaizo/mlops_zoomcamp/tree/main/03_orchestration/kestra/scripts)
+* Created a [flow](https://github.com/Maxkaizo/mlops_zoomcamp/blob/main/03_orchestration/kestra/flows/load_data_nyc.yaml) in kestra  that coordinates the pipeline execution
 
 ![alt text](images/first_flow.png)
 
