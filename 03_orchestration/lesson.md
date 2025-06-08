@@ -96,6 +96,10 @@ and added the scheduled trigger
 
 * Learn to run the workflow for some of the past months
 
+In kestra Backfilling is kind of simple, as you can select it on the user interface
+
+![alt text](images/backfilling.png)
+
 ### Step 6: Deployment (optional)
 
 * Learn to deploy the tool to the cloud 
