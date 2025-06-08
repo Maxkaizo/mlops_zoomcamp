@@ -62,6 +62,11 @@ Beyond this point, we'll need persistent storage, so we'll use Docker volumes le
 * Get the code from the previous unit (see [code](code/))
 * Use the tool to orchestrate the steps in the pipeline
 
+#### Solution.
+
+
+
+![alt text](images/first_flow.png)
 
 
 ### Step 4: Parametrizing the Workflow
