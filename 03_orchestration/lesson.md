@@ -76,6 +76,22 @@ Beyond this point, we'll need persistent storage, so we'll use Docker volumes le
 * The train data should be from two months ago
 * The validation data - one month ago
 
+#### Solution.
+
+Used a quick fix, as recent data is not yet available for taxi trips
+
+![alt text](images/nota_avail.png)
+
+So used older files
+
+![alt text](images/oldest.png)
+
+
+and added the scheduled trigger
+
+
+![alt text](images/scheduled.png)
+
 ### Step 5: Backfilling
 
 * Learn to run the workflow for some of the past months
