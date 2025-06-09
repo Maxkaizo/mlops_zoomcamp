@@ -100,9 +100,17 @@ In kestra Backfilling is kind of simple, as you can select it on the user interf
 
 ![alt text](images/backfilling.png)
 
+Here's the result:
+
+![alt text](images/backfill_logs.png)
+
+![alt text](images/backfill_metrics.png)
+
+
 ### Step 6: Deployment (optional)
 
 * Learn to deploy the tool to the cloud 
+
 
 ### Resources 
 
