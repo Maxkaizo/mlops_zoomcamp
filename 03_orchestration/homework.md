@@ -66,6 +66,11 @@ What's the size of the result?
 - 3,316,216 
 - 3,503,766
 
+### Solution
+* Answer to question 3 and 4 
+![alt text](images/df_sizes.png)
+
+
 ## Question 5. Train a model
 
 We will now train a linear regression model using the same code as in homework 1.
@@ -95,6 +100,10 @@ Find the logged model, and find MLModel file. What's the size of the model? (`mo
 * 9,534
 * 4,534
 * 1,534
+
+### Solution to Q5 and 6
+
+![alt text](images/intercept_and_model_size.png)
 
 
 ## Submit the results
