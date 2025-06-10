@@ -106,7 +106,7 @@ Find the logged model, and find MLModel file. What's the size of the model? (`mo
 ![alt text](images/intercept_and_model_size.png)
 
 * validation
-I did a script with a simple model training and got the same results
+I did a [script](https://github.com/Maxkaizo/mlops_zoomcamp/blob/main/03_orchestration/dev_tests/simple.py) with a simple model training and got the same results
 
 ![alt text](images/script_validation.png)
 
