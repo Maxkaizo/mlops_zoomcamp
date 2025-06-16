@@ -66,3 +66,64 @@ RUN pip install pipenv
 ```
 
 This keeps the image lean, fast, and functional while bypassing system restrictions safely inside the container.
+
+## 🧩 Common Pitfalls When Using Pipenv
+
+When working with `pipenv`, it's important to avoid mixing it with other environment managers like `venv` or `conda` unless you know exactly what you're doing.
+
+Here are some common scenarios and how to handle them correctly:
+
+### ✅ Safe: Using Pipenv inside Conda base
+If you’re inside a Conda base environment (e.g., `(base)` is shown in your terminal), and you run:
+
+```bash
+pipenv install scikit-learn
+```
+
+Pipenv will **ignore the Conda environment** and create a **separate isolated virtualenv** under:
+
+```
+~/.local/share/virtualenvs/
+```
+
+✅ This is safe.
+❗ Just make sure you don’t manually activate a `.venv` or another environment afterwards.
+
+---
+
+### ❌ Not Recommended: Manually activating `.venv` and then using Pipenv
+
+```bash
+source .venv/bin/activate
+pipenv shell  # ⛔ Will trigger warnings or unexpected behavior
+```
+
+This causes **nested environments**, which can result in path conflicts, broken dependencies, or invisible package installs.
+
+---
+
+### ❌ Not Recommended: Using `pip install` inside a Pipenv shell
+
+```bash
+pip install pandas  # ⛔ Installs the package, but Pipenv won’t track it
+```
+
+Instead, use:
+
+```bash
+pipenv install pandas  # ✅ Also updates Pipfile and Pipfile.lock
+```
+
+---
+
+### 🧠 Summary
+
+| Action                                      | Recommended? | Why                                       |
+| ------------------------------------------- | ------------ | ----------------------------------------- |
+| `pipenv install` from Conda base            | ✅ Yes        | Pipenv creates its own environment safely |
+| Manual `source .venv/bin/activate` + Pipenv | ❌ No         | Causes environment nesting                |
+| `pip install` inside `pipenv shell`         | ❌ No         | Bypasses Pipenv’s dependency tracking     |
+
+---
+
+Stick to using only one environment manager per project and let `pipenv` do the heavy lifting.
