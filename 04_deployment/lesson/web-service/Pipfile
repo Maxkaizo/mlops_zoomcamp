@@ -7,11 +7,15 @@ name = "pypi"
 pandas = "*"
 seaborn = "*"
 matplotlib = "*"
-scikit-learn = "*"
+scikit-learn = "==1.7.0"
 pyarrow = "*"
 ipykernel = "*"
+flask = "*"
+requests = "*"
+gunicorn = "*"
 
 [dev-packages]
+requests = "*"
 
 [requires]
 python_version = "3.12"

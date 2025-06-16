@@ -67,7 +67,7 @@ RUN pip install pipenv
 
 This keeps the image lean, fast, and functional while bypassing system restrictions safely inside the container.
 
-## 🧩 Common Pitfalls When Using Pipenv
+# 🧩 Common Pitfalls When Using Pipenv
 
 When working with `pipenv`, it's important to avoid mixing it with other environment managers like `venv` or `conda` unless you know exactly what you're doing.
 
