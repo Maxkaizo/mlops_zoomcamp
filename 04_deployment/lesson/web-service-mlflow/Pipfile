@@ -14,7 +14,7 @@ flask = "*"
 requests = "*"
 gunicorn = "*"
 boto3 = "*"
-mlflow = "*"
+mlflow = "==2.22.0"
 
 [dev-packages]
 requests = "*"

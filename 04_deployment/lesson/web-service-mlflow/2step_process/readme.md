@@ -1,0 +1,1 @@
+in this folder I'll keep the files that process the model in two steps, one for the vectorizer and one for the model, in the final version of the lesson, Alexey uses only one step by leveragin sklearn pipelines
