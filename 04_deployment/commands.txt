@@ -1,3 +1,15 @@
 # to run predict on gunicorn
 
 gunicorn --bind=0.0.0.0:9696 predict:app
+
+# to create the docker image 
+docker build -t ride-duration-prediction-service:v1 .
+
+# to run the docker container
+ docker run -it --rm -p 9696:9696 ride-duration-prediction-service:v1
+
+# to run mlflow server
+mlflow server \
+    --backend-store-uri=sqlite:///mlflow.db \
+    --default-artifact-root=s3://mlops-maxkaizo-2025/
+
