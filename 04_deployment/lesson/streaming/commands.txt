@@ -16,7 +16,7 @@ aws kinesis put-record \
     --data "SG9sYSBDYWxpZm9ybmlh"
 
 
-# probar ya con datos en json
+# probar ya con datos en json ( mandar un mensaje al stream de kinesis)
 
 payload=$(echo -n '{
     "ride": {
@@ -34,3 +34,47 @@ aws kinesis put-record \
     --partition-key 1 \
     --region us-west-1 \
     --data "$payload"
+
+
+# para checar como llega el mensaje al segundo stream (simulando un consumidor)
+
+KINESIS_STREAM_OUTPUT='ride_predictions'
+SHARD='shardId-000000000000'
+
+SHARD_ITERATOR=$(aws kinesis \
+    get-shard-iterator \
+        --shard-id ${SHARD} \
+        --shard-iterator-type TRIM_HORIZON \
+        --stream-name ${KINESIS_STREAM_OUTPUT} \
+        --region us-west-1 \
+        --query 'ShardIterator' \
+)
+
+RESULT=$(aws kinesis get-records --region us-west-1 --shard-iterator $SHARD_ITERATOR)
+
+echo ${RESULT} | jq -r '.Records[0].Data' | base64 --decode | jq
+
+## Running the test
+
+export PREDICTIONS_STREAM_NAME="ride_predictions"
+export RUN_ID="d021e50a75ba44a9b09707c14bdaac7f"
+export TEST_RUN="True"
+
+python test.py
+
+
+# build the docker container
+
+docker build -t stream-model-duration:v1 .
+
+
+# Run the docker container
+
+docker run -it --rm \
+    -p 8080:8080 \
+    -e PREDICTIONS_STREAM_NAME="ride_predictions" \
+    -e RUN_ID="d021e50a75ba44a9b09707c14bdaac7f" \
+    -e TEST_RUN="True" \
+    -e AWS_DEFAULT_REGION="us-west-1" \
+    -v /home/maxkaizo/.aws:/root/.aws \
+    stream-model-duration:v1
