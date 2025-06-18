@@ -78,3 +78,27 @@ docker run -it --rm \
     -e AWS_DEFAULT_REGION="us-west-1" \
     -v /home/maxkaizo/.aws:/root/.aws \
     stream-model-duration:v1
+
+
+
+# Para crear el repositorio ECR
+
+ aws ecr create-repository --repository-name duration-model --region us-west-1
+
+# Para loggearse
+
+Antes:
+$(aws ecr get-login --no-include-email)
+
+ahora:
+aws ecr get-login-password --region us-west-1 | docker login --username AWS --password-stdin 438480637738.dkr.ecr.us-west-1.amazonaws.com
+
+# Para subir la imagen
+
+REMOTE_URI="438480637738.dkr.ecr.us-west-1.amazonaws.com/duration-model"
+REMOTE_TAG="v1"
+REMOTE_IMAGE=${REMOTE_URI}:${REMOTE_TAG}
+
+LOCAL_IMAGE="stream-model-duration:v1"
+docker tag ${LOCAL_IMAGE} ${REMOTE_IMAGE}
+docker push ${REMOTE_IMAGE}
