@@ -1,0 +1,36 @@
+# to send a test message to kinesis
+
+KINESIS_STREAM_INPUT=ride_events
+aws kinesis put-record \
+    --stream-name ${KINESIS_STREAM_INPUT} \
+    --partition-key 1 \
+    --data "Hello, this is a test."
+
+In my tests I found that is better to send the data encoded
+
+echo -n "Hola California" | base64
+aws kinesis put-record \
+    --stream-name ride_events_calif \
+    --partition-key 1 \
+    --region us-west-1 \
+    --data "SG9sYSBDYWxpZm9ybmlh"
+
+
+# probar ya con datos en json
+
+payload=$(echo -n '{
+    "ride": {
+        "PULocationID": 130,
+        "DOLocationID": 205,
+        "trip_distance": 3.66
+    }, 
+    "ride_id": 156
+}' | base64)
+
+KINESIS_STREAM_INPUT=ride_events_calif
+
+aws kinesis put-record \
+    --stream-name ${KINESIS_STREAM_INPUT} \
+    --partition-key 1 \
+    --region us-west-1 \
+    --data "$payload"
