@@ -113,6 +113,14 @@ What's the mean predicted duration?
 
 Hint: just add a print statement to your script.
 
+### Q5. Solution
+
+* Arguments definition
+![alt text](images/args.png)
+
+* Result
+![alt text](images/april_mean_dur.png)
+
 
 ## Q6. Docker container 
 
@@ -155,6 +163,9 @@ for May 2023?
 * 14.24
 * 21.19
 
+### Q6. Solution
+
+![alt text](images/q6_sol.png)
 
 ## Bonus: upload the result to the cloud (Not graded)
 
