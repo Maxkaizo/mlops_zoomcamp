@@ -5,7 +5,7 @@ import numpy as np
 import scipy
 import sklearn
 from sklearn.feature_extraction import DictVectorizer
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import root_mean_squared_error
 import mlflow
 import xgboost as xgb
 from prefect import flow, task
@@ -31,17 +31,7 @@ def read_data(filename: str) -> pd.DataFrame:
 
 
 @task
-def add_features(
-    df_train: pd.DataFrame, df_val: pd.DataFrame
-) -> tuple(
-    [
-        scipy.sparse._csr.csr_matrix,
-        scipy.sparse._csr.csr_matrix,
-        np.ndarray,
-        np.ndarray,
-        sklearn.feature_extraction.DictVectorizer,
-    ]
-):
+def add_features(df_train: pd.DataFrame, df_val: pd.DataFrame):
     """Add features to the model"""
     df_train["PU_DO"] = df_train["PULocationID"] + "_" + df_train["DOLocationID"]
     df_val["PU_DO"] = df_val["PULocationID"] + "_" + df_val["DOLocationID"]
@@ -97,27 +87,27 @@ def train_best_model(
         )
 
         y_pred = booster.predict(valid)
-        rmse = mean_squared_error(y_val, y_pred, squared=False)
+        rmse = root_mean_squared_error(y_val, y_pred)
         mlflow.log_metric("rmse", rmse)
 
         pathlib.Path("models").mkdir(exist_ok=True)
         with open("models/preprocessor.b", "wb") as f_out:
             pickle.dump(dv, f_out)
-        mlflow.log_artifact("models/preprocessor.b", artifact_path="preprocessor")
+        mlflow.log_artifact("models/preprocessor.b", artifact_path="artifact_name_pred")
 
-        mlflow.xgboost.log_model(booster, artifact_path="models_mlflow")
+        mlflow.xgboost.log_model(booster, artifact_path="model_name_pred")
     return None
 
 
 @flow
 def main_flow(
-    train_path: str = "./data/green_tripdata_2021-01.parquet",
-    val_path: str = "./data/green_tripdata_2021-02.parquet",
+    train_path: str = "../data/green_tripdata_2023-01.parquet",
+    val_path: str = "../data/green_tripdata_2023-02.parquet",
 ) -> None:
     """The main training pipeline"""
 
     # MLflow settings
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
+    mlflow.set_tracking_uri("http://localhost:5000")
     mlflow.set_experiment("nyc-taxi-experiment")
 
     # Load
