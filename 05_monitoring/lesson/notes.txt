@@ -1,0 +1,15 @@
+grafana pass
+admin
+4dm1n
+
+----
+
+datos postgres
+
+host: db
+username: postgres
+password: example
+db: postgres
+
+--
+
