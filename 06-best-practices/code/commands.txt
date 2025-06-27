@@ -1,0 +1,104 @@
+# to send a test message to kinesis
+
+KINESIS_STREAM_INPUT=ride_events
+aws kinesis put-record \
+    --stream-name ${KINESIS_STREAM_INPUT} \
+    --partition-key 1 \
+    --data "Hello, this is a test."
+
+In my tests I found that is better to send the data encoded
+
+echo -n "Hola California" | base64
+aws kinesis put-record \
+    --stream-name ride_events_calif \
+    --partition-key 1 \
+    --region us-west-1 \
+    --data "SG9sYSBDYWxpZm9ybmlh"
+
+
+# probar ya con datos en json ( mandar un mensaje al stream de kinesis)
+
+payload=$(echo -n '{
+    "ride": {
+        "PULocationID": 130,
+        "DOLocationID": 205,
+        "trip_distance": 3.66
+    }, 
+    "ride_id": 158
+}' | base64)
+
+KINESIS_STREAM_INPUT=ride_events_calif
+
+aws kinesis put-record \
+    --stream-name ${KINESIS_STREAM_INPUT} \
+    --partition-key 1 \
+    --region us-west-1 \
+    --data "$payload"
+
+
+# para checar como llega el mensaje al segundo stream (simulando un consumidor)
+
+KINESIS_STREAM_OUTPUT='ride_predictions'
+SHARD='shardId-000000000000'
+
+SHARD_ITERATOR=$(aws kinesis \
+    get-shard-iterator \
+        --shard-id ${SHARD} \
+        --shard-iterator-type TRIM_HORIZON \
+        --stream-name ${KINESIS_STREAM_OUTPUT} \
+        --region us-west-1 \
+        --query 'ShardIterator' \
+)
+
+RESULT=$(aws kinesis get-records --region us-west-1 --shard-iterator $SHARD_ITERATOR)
+
+echo ${RESULT} | jq -r '.Records[0].Data' | base64 --decode | jq
+
+## Running the test
+
+export PREDICTIONS_STREAM_NAME="ride_predictions"
+export RUN_ID="d021e50a75ba44a9b09707c14bdaac7f"
+export TEST_RUN="True"
+
+python test.py
+
+
+# build the docker container
+
+docker build -t stream-model-duration:v1 .
+
+
+# Run the docker container
+
+docker run -it --rm \
+    -p 8080:8080 \
+    -e PREDICTIONS_STREAM_NAME="ride_predictions" \
+    -e RUN_ID="d021e50a75ba44a9b09707c14bdaac7f" \
+    -e TEST_RUN="True" \
+    -e AWS_DEFAULT_REGION="us-west-1" \
+    -v /home/maxkaizo/.aws:/root/.aws \
+    stream-model-duration:v1
+
+
+
+# Para crear el repositorio ECR
+
+ aws ecr create-repository --repository-name duration-model --region us-west-1
+
+# Para loggearse
+
+Antes:
+$(aws ecr get-login --no-include-email)
+
+ahora:
+aws ecr get-login-password --region us-west-1 | docker login --username AWS --password-stdin 438480637738.dkr.ecr.us-west-1.amazonaws.com
+
+# Para subir la imagen
+
+REMOTE_URI="438480637738.dkr.ecr.us-west-1.amazonaws.com/duration-model"
+REMOTE_TAG="v2"
+REMOTE_IMAGE=${REMOTE_URI}:${REMOTE_TAG}
+
+LOCAL_IMAGE="stream-model-duration:v1"
+docker tag ${LOCAL_IMAGE} ${REMOTE_IMAGE}
+docker push ${REMOTE_IMAGE}
