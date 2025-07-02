@@ -35,3 +35,18 @@ How many rows should be there in the expected dataframe?
 * 2
 
 ![alt text](image-1.png)
+
+## Q4. Mocking S3 with Localstack
+
+In both cases we should adjust commands for localstack. What option do we need to use for such purposes?
+
+* --backend-store-uri
+* --profile
+* --endpoint-url
+* --version
+
+### Q4. Solution
+
+* --endpoint-url
+
+![alt text](image-2.png)
