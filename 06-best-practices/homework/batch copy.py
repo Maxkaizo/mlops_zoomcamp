@@ -7,18 +7,8 @@ import pickle
 import pandas as pd
 
 def read_data(filename):
-    endpoint = os.getenv('S3_ENDPOINT_URL', None)
-
-    if endpoint is None:
-        return pd.read_parquet(filename)   
-    else:
-        options = {
-            'client_kwargs': {
-                'endpoint_url': endpoint
-            }
-        }
-
-        return pd.read_parquet(filename, storage_options=options)
+    df = pd.read_parquet(filename)
+    return df
 
 
 def prepare_data(df, categorical):
@@ -44,20 +34,10 @@ def get_output_path(year, month):
     return output_pattern.format(year=year, month=month)
 
 
-def write_data(df, filename):
-    endpoint = os.getenv('S3_ENDPOINT_URL', None)
-    if endpoint is None:
-        df.to_parquet(filename, engine='pyarrow', index=False)
-    else:
-        options = {
-            'client_kwargs': {
-                'endpoint_url': endpoint
-            }
-        }
-        df.to_parquet(filename, engine='pyarrow', index=False, storage_options=options)
-
-
 def main(year, month):
+
+    input_file = f'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_{year:04d}-{month:02d}.parquet'
+    output_file = f'yellow_tripdata_{year:04d}-{month:02d}.parquet'
 
     with open('model.bin', 'rb') as f_in:
         dv, lr = pickle.load(f_in)
@@ -79,11 +59,11 @@ def main(year, month):
     df_result['ride_id'] = df['ride_id']
     df_result['predicted_duration'] = y_pred
 
-    write_data(df_result, output_file)
+    df_result.to_parquet(output_file, engine='pyarrow', index=False)
 
 if __name__ == "__main__":
     year = int(sys.argv[1])
     month = int(sys.argv[2])
-    input_file = get_input_path(year, month)
-    output_file = get_output_path(year, month)
+    # input_file = get_input_path(year, month)
+    # output_file = get_output_path(year, month)
     main(year, month)

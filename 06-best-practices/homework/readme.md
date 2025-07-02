@@ -50,3 +50,11 @@ In both cases we should adjust commands for localstack. What option do we need t
 * --endpoint-url
 
 ![alt text](image-2.png)
+
+
+## Migrating to localstack
+
+* Make input and output paths configurable
+* Reading from Localstack S3 with Pandas
+
+![alt text](image-3.png)
