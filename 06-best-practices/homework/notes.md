@@ -55,15 +55,6 @@ aws --endpoint-url=http://localhost:4566 s3 cp yellow_tripdata_2023-03.parquet s
 
 
 
-
-
-
-
-
-
-
-
-
 ###
 
 ``` bash

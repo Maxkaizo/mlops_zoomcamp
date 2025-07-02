@@ -54,7 +54,13 @@ def write_data(df, filename):
                 'endpoint_url': endpoint
             }
         }
-        df.to_parquet(filename, engine='pyarrow', index=False, storage_options=options)
+        df.to_parquet(
+            filename,
+            engine='pyarrow',
+            compression=None,
+            index=False,
+            storage_options=options
+        )
 
 
 def main(year, month):

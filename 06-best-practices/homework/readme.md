@@ -58,3 +58,20 @@ In both cases we should adjust commands for localstack. What option do we need t
 * Reading from Localstack S3 with Pandas
 
 ![alt text](image-3.png)
+
+
+## Q5. Creating test data
+
+What's the size of the file?
+
+* 3620
+* 23620
+* 43620
+* 63620
+
+
+### Q5. Solution
+
+* 3620
+
+![alt text](image-4.png)
