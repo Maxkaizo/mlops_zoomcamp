@@ -29,3 +29,9 @@ How many rows should be there in the expected dataframe?
 * 2
 * 3
 * 4
+
+### Q3. Solution
+
+* 2
+
+![alt text](image-1.png)
