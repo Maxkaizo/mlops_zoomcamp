@@ -75,3 +75,21 @@ What's the size of the file?
 * 3620
 
 ![alt text](image-4.png)
+
+
+## Q6. Finish the integration test
+
+What's the sum of predicted durations for the test dataframe?
+
+* 13.08
+* 36.28
+* 69.28
+* 81.08
+
+### Q6. Solution
+
+* 36.28
+
+![alt text](image-5.png)
+
+![alt text](image-6.png)
