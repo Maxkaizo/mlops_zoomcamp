@@ -1,0 +1,18 @@
+id: test-write-artifact
+namespace: mlops_zoomcamp
+description: "Test simple para verificar el montaje de /mlflow desde contenedor"
+
+tasks:
+  - id: write_file
+    type: io.kestra.plugin.docker.Run
+    containerImage: python:3.11-slim
+    namespaceFiles:
+      enabled: false
+    networkMode: host
+    commands:
+      - "/bin/sh"
+      - "-c"
+      - |
+        echo "🧪 Archivo de prueba desde contenedor de Kestra" > test_from_kestra.txt
+    outputFiles:
+      - test_from_kestra.txt

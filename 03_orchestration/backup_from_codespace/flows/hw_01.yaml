@@ -1,0 +1,53 @@
+id: hw_01
+namespace: mlops_zoomcamp
+
+description: Load and preprocess NYC taxi data, save as Parquet for training.
+
+inputs:
+  - id: year
+    type: SELECT
+    displayName: Select year
+    values: ["2021", "2022", "2023"]
+    defaults: "2021"
+    allowCustomValue: true
+
+  - id: month
+    type: SELECT
+    displayName: Select month
+    values: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
+    defaults: "01"
+    allowCustomValue: true
+
+tasks:
+  - id: load_data
+    type: io.kestra.plugin.scripts.python.Commands
+    containerImage: python:3.11-slim
+    namespaceFiles:
+      enabled: true
+    beforeCommands:
+      - pip install pandas pyarrow
+    commands:
+      - python hw.py --year={{render(inputs.year)}} --month={{render(inputs.month)}}
+    outputFiles:
+      - df_train.parquet
+
+  - id: train_model
+    type: io.kestra.plugin.docker.Run
+    containerImage: python:3.11-slim
+    networkMode: host
+    pullPolicy: IF_NOT_PRESENT
+    namespaceFiles:
+      enabled: true
+    commands:
+      - "/bin/sh"
+      - "-c"
+      - |
+        pip install pandas scikit-learn pyarrow joblib mlflow && \
+        echo "MLflow URI: {{ kv('MLFLOW_TRACKING_URI') }}" && \
+        python hw_train.py \
+          --mlflow_uri={{ kv('MLFLOW_TRACKING_URI') }} \
+          --experiment=nyc-taxi-experiment \
+          --input_file={{ outputs.load_data.outputFiles["df_train.parquet"] }}
+    outputFiles:
+      - model.pkl
+      - dv.joblib

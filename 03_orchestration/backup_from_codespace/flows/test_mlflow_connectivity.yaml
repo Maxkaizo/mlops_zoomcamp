@@ -1,0 +1,18 @@
+id: test_mlflow_connectivity
+namespace: mlops_zoomcamp
+
+description: Prueba la conectividad con MLflow desde contenedor lanzado por Kestra usando modo `host`.
+
+tasks:
+  - id: run_container
+    type: io.kestra.plugin.docker.Run
+    pullPolicy: IF_NOT_PRESENT
+    containerImage: curlimages/curl:latest
+    networkMode: host  # 👈 usa la red del host directamente
+    commands:
+      - "/bin/sh"
+      - "-c"
+      - |
+        echo "🔍 Verificando conectividad con MLflow en modo host..." && \
+        echo "🌐 Probando con: curl http://localhost:5000" && \
+        curl -v http://localhost:5000 || echo "❌ Falló la conexión"

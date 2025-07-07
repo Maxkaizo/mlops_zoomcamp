@@ -1,0 +1,81 @@
+id: load_data_nyc
+namespace: mlops_zoomcamp
+
+description: Load and preprocess NYC taxi data, save as Parquet for training.
+
+inputs:
+  - id: year
+    type: SELECT
+    displayName: Select year
+    values: ["2021", "2022", "2023"]
+    defaults: "2021"
+    allowCustomValue: true
+
+  - id: month
+    type: SELECT
+    displayName: Select month
+    values: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
+    defaults: "01"
+    allowCustomValue: true
+
+tasks:
+  - id: load_data
+    type: io.kestra.plugin.scripts.python.Commands
+    containerImage: python:3.11-slim
+    namespaceFiles:
+      enabled: true
+    beforeCommands:
+      - echo "Archivos disponibles:"
+      - ls -l
+      - pip install pandas pyarrow
+      - echo "RUNNING SCRIPT WITH:"
+      - echo "python 01_load_data.py --year={{render(inputs.year)}} --month={{render(inputs.month)}}"
+    commands:
+      - python 01_load_data.py --year={{render(inputs.year)}} --month={{render(inputs.month)}}
+    outputFiles:
+      - df_train.parquet
+      - df_val.parquet
+
+  - id: vectorize_data
+    type: io.kestra.plugin.scripts.python.Commands
+    containerImage: python:3.11-slim
+    namespaceFiles:
+      enabled: true
+    beforeCommands:
+      - pip install pandas scikit-learn scipy joblib pyarrow
+      - "echo \"Train path: {{render(outputs.load_data.outputFiles['df_train.parquet'])}}\""
+      - "echo \"Val path: {{render(outputs.load_data.outputFiles['df_val.parquet'])}}\""
+    commands:
+      - python 02_vectorize.py --train_path={{render(outputs.load_data.outputFiles["df_train.parquet"])}} --val_path={{render(outputs.load_data.outputFiles["df_val.parquet"])}}
+
+    outputFiles:
+      - dv.pkl
+      - X_train.npz
+      - X_val.npz
+      - y_train.npy
+      - y_val.npy
+
+  - id: train_model
+    type: io.kestra.plugin.docker.Run
+    containerImage: python:3.11-slim
+    networkMode: host
+    pullPolicy: IF_NOT_PRESENT
+    namespaceFiles:
+      enabled: true
+    commands:
+      - "/bin/sh"
+      - "-c"
+      - |
+        pip install xgboost scikit-learn mlflow joblib numpy && \
+        echo "MLflow URI: {{ kv('MLFLOW_TRACKING_URI') }}" && \
+        python 03_train_model.py \
+          --mlflow_uri={{ kv('MLFLOW_TRACKING_URI') }} \
+          --experiment=nyc-taxi-experiment \
+          --train_path={{ outputs.vectorize_data.outputFiles["X_train.npz"] }} \
+          --train_target={{ outputs.vectorize_data.outputFiles["y_train.npy"] }} \
+          --val_path={{ outputs.vectorize_data.outputFiles["X_val.npz"] }} \
+          --val_target={{ outputs.vectorize_data.outputFiles["y_val.npy"] }} \
+          --dv_path={{ outputs.vectorize_data.outputFiles["dv.pkl"] }}
+    outputFiles:
+      - model.pkl
+
